@@ -52,6 +52,10 @@ app.$get("/error", async (req, res) => {
   res.send('I will never show :(');
 });
 
+app.$post("/sync", (req, res) => {
+  res.send('I\'m sync? ^__^');
+});
+
 app.$use(async (err, req, res, next) => {
   console.error(err);
 
