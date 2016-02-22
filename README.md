@@ -17,6 +17,51 @@ npm install exa --save
 --------------------------------------------------------------------------------
 
 ## Usage
+```js
+/** 
+ * @note
+ * bare - not compilled with Babel sources.
+ *        if you use ES6 syntax, import "exa" like this:
+ *        require('exa');
+ */
+import exa      from 'exa/bare'; 
+import express  from 'express';
+
+const app = exa(express());
+
+// Mem delay
+function work(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}
+
+app.$get("/", async (req, res) => {
+  console.log('wow!');
+  await work(3000);
+  console.log('so async!');
+
+  res.send('ES7 soooo cool!');
+});
+
+app.$get("/error", async (req, res) => {
+  throw new Error("Booom!!!");
+
+  res.send('I will never show :(');
+});
+
+app.$use(async (err, req, res, next) => {
+  console.error(err);
+
+  console.log("Start working");
+  await work(3000);
+  console.log("Finish working");
+
+  res.statusStatus(500);
+});
+```
 
 --------------------------------------------------------------------------------
 
