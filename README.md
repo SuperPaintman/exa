@@ -17,6 +17,55 @@ npm install exa --save
 --------------------------------------------------------------------------------
 
 ## Usage
+**ES6 generator**
+
+```js
+const exa      = require('exa');
+const express  = require('express');
+
+const app = exa(express());
+
+// Mem delay
+function work(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}
+
+app.$get("/", function * (req, res) {
+  console.log('wow!');
+  yield work(3000);
+  console.log('so async!');
+
+  res.send('ES7 soooo cool!');
+});
+
+app.$get("/error", function * (req, res) {
+  throw new Error("Booom!!!");
+
+  res.send('I will never show :(');
+});
+
+app.$post("/sync", (req, res) => {
+  res.send('I\'m sync? ^__^');
+});
+
+app.$use(function * (err, req, res, next) {
+  console.error(err); // "Booom" error
+
+  console.log("Start working");
+  yield work(3000);
+  console.log("Finish working");
+
+  res.statusStatus(500);
+});
+```
+
+
+**ES7 async/await**
+
 ```js
 import exa      from 'exa'; 
 import express  from 'express';
@@ -51,7 +100,7 @@ app.$post("/sync", (req, res) => {
 });
 
 app.$use(async (err, req, res, next) => {
-  console.error(err);
+  console.error(err); // "Booom" error
 
   console.log("Start working");
   await work(3000);
