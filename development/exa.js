@@ -1,7 +1,7 @@
 "use strict";
 /** Requires */
-import _ from 'lodash';
-import methods from 'methods';
+import _        from 'lodash';
+import methods  from 'methods';
 
 /** Helps */
 const slice = Array.prototype.slice;
@@ -40,7 +40,7 @@ function proxyCallbacks(callbacks) {
               next(err);
             });
           }
-        }
+        };
         break;
       case 3:
         callback = function (req, res, next) {
@@ -51,7 +51,7 @@ function proxyCallbacks(callbacks) {
               next(err);
             });
           }
-        }
+        };
         break;
       case 2:
       default:
@@ -63,7 +63,7 @@ function proxyCallbacks(callbacks) {
               next(err);
             });
           }
-        }
+        };
         break;
     }
 
@@ -90,7 +90,7 @@ export default function exa(router, options) {
     if (router[method]) {
       const newMethodName = options.name[method]
                           ? options.name[method]
-                          : method
+                          : method;
 
       const $method = options.prefix + newMethodName + options.suffix;
 
