@@ -24,7 +24,7 @@ var slice = Array.prototype.slice;
 /**
  * Проверка на промис
  * @param  {Any}  obj
- * 
+ *
  * @return {Boolean}
  */
 function isPromise(obj) {
@@ -34,7 +34,7 @@ function isPromise(obj) {
 /**
  * Оборачивает все колбеки в прокси
  * @param  {Array} callbacks
- * 
+ *
  * @return {Array}
  */
 function proxyCallbacks(callbacks) {
@@ -87,7 +87,7 @@ function proxyCallbacks(callbacks) {
  * Примешивает Async/Await к Express
  * @param  {Express|Router} router
  * @param  {Object} options
- * 
+ *
  * @return {Express|Router}
  */
 function exa(router, options) {

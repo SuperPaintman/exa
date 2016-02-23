@@ -9,20 +9,20 @@ const slice = Array.prototype.slice;
 /**
  * Проверка на промис
  * @param  {Any}  obj
- * 
+ *
  * @return {Boolean}
  */
 function isPromise(obj) {
-  return !!obj 
-    && (obj.constructor && obj.constructor.name === 'Promise') 
-    || (!!obj.then  && typeof obj.then  === 'function') 
+  return !!obj
+    && (obj.constructor && obj.constructor.name === 'Promise')
+    || (!!obj.then  && typeof obj.then  === 'function')
     || (!!obj.catch && typeof obj.catch === 'function');
 }
 
 /**
  * Оборачивает все колбеки в прокси
  * @param  {Array} callbacks
- * 
+ *
  * @return {Array}
  */
 function proxyCallbacks(callbacks) {
@@ -75,7 +75,7 @@ function proxyCallbacks(callbacks) {
  * Примешивает Async/Await к Express
  * @param  {Express|Router} router
  * @param  {Object} options
- * 
+ *
  * @return {Express|Router}
  */
 export default function exa(router, options) {
