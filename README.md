@@ -6,7 +6,7 @@
 [![NPM Downloads][npm-dm-image]][npm-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
 
-
+ES7 async/await route handlers for Express
 
 
 ## Installation

@@ -1,7 +1,7 @@
 {
   "name": "exa",
-  "version": "0.2.0",
-  "description": "",
+  "version": "0.2.1",
+  "description": "ES7 async/await route handlers for Express",
   "main": "bin/exa.js",
   "author": {
     "name": "SuperPaintman",
@@ -17,7 +17,14 @@
     "prepublish": "npm run lint && npm run build && npm run test"
   },
   "keywords": [
-    "express"
+    "express",
+    "generator",
+    "flow",
+    "promise",
+    "ES7",
+    "async",
+    "async-await",
+    "routes"
   ],
   "files": [
     "development",
