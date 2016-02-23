@@ -19,18 +19,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /** Helps */
+var slice = Array.prototype.slice;
+
 /**
  * Проверка на промис
- * @param  {Any}  func
+ * @param  {Any}  obj
  * 
  * @return {Boolean}
  */
-function isPromise(func) {
-  try {
-    return !!func.then && typeof func.then === 'function' || !!func.catch && typeof func.catch === 'function';
-  } catch (e) {
-    return false;
-  }
+function isPromise(obj) {
+  return !!obj && obj.constructor && obj.constructor.name === 'Promise' || !!obj.then && typeof obj.then === 'function' || !!obj.catch && typeof obj.catch === 'function';
 }
 
 /**
@@ -39,12 +37,12 @@ function isPromise(func) {
  * 
  * @return {Array}
  */
-function proxysify(callbacks) {
+function proxyCallbacks(callbacks) {
   return callbacks.map(function (callback) {
     var _callback = callback;
 
     var result = undefined;
-    switch (_callback.length) {
+    switch (callback.length) {
       case 4:
         callback = function callback(err, req, res, next) {
           result = _callback(err, req, res, next);
@@ -96,7 +94,7 @@ function exa(router, options) {
   options = _lodash2.default.merge({
     prefix: "$",
     suffix: "",
-    name: {}
+    alias: {}
   }, options);
 
   // Use
@@ -112,7 +110,7 @@ function exa(router, options) {
         }
 
         // Proxy
-        callbacks = proxysify(callbacks);
+        callbacks = proxyCallbacks(callbacks);
 
         router[method].apply(router, _toConsumableArray(callbacks));
       };
@@ -120,17 +118,17 @@ function exa(router, options) {
   });
 
   // Other
-  _methods2.default.concat('all').forEach(function (method) {
+  [].concat(_toConsumableArray(_methods2.default), ['all']).forEach(function (method) {
     if (router[method]) {
       var $method = options.prefix + method + options.suffix;
 
       router[$method] = function (path) {
-        var callbacks = Array.prototype.slice.call(arguments, 1);
+        var callbacks = slice.call(arguments, 1);
 
         // Proxy
-        callbacks = proxysify(callbacks);
+        callbacks = proxyCallbacks(callbacks);
 
-        var args = [path].concat(callbacks);
+        var args = [].concat(_toConsumableArray(callbacks), [path]);
 
         router[method].apply(router, _toConsumableArray(args));
       };

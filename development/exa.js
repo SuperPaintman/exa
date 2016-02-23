@@ -4,19 +4,19 @@ import _ from 'lodash';
 import methods from 'methods';
 
 /** Helps */
+const slice = Array.prototype.slice;
+
 /**
  * Проверка на промис
- * @param  {Any}  func
+ * @param  {Any}  obj
  * 
  * @return {Boolean}
  */
-function isPromise(func) {
-  try {
-    return (!!func.then && typeof func.then === 'function') 
-      || (!!func.catch && typeof func.catch === 'function');
-  } catch(e) {
-    return false;
-  }
+function isPromise(obj) {
+  return !!obj 
+    && (obj.constructor && obj.constructor.name === 'Promise') 
+    || (!!obj.then  && typeof obj.then  === 'function') 
+    || (!!obj.catch && typeof obj.catch === 'function');
 }
 
 /**
@@ -25,12 +25,12 @@ function isPromise(func) {
  * 
  * @return {Array}
  */
-function proxysify(callbacks) {
+function proxyCallbacks(callbacks) {
   return callbacks.map((callback) => {
     const _callback = callback;
 
     let result;
-    switch (_callback.length) {
+    switch (callback.length) {
       case 4:
         callback = function (err, req, res, next) {
           result = _callback(err, req, res, next);
@@ -82,7 +82,7 @@ export default function exa(router, options) {
   options = _.merge({
     prefix: "$",
     suffix: "",
-    name: {}
+    alias: {}
   }, options);
 
   // Use
@@ -96,7 +96,7 @@ export default function exa(router, options) {
 
       router[$method] = function (...callbacks) {
         // Proxy
-        callbacks = proxysify(callbacks);
+        callbacks = proxyCallbacks(callbacks);
 
         router[method](...callbacks);
       };
@@ -104,17 +104,17 @@ export default function exa(router, options) {
   });
 
   // Other
-  methods.concat('all').forEach((method) => {
+  [...methods, 'all'].forEach((method) => {
     if (router[method]) {
       const $method = options.prefix + method + options.suffix;
 
       router[$method] = function (path) {
-        let callbacks = Array.prototype.slice.call(arguments, 1);
+        let callbacks = slice.call(arguments, 1);
 
         // Proxy
-        callbacks = proxysify(callbacks);
+        callbacks = proxyCallbacks(callbacks);
 
-        const args = [path].concat(callbacks);
+        const args = [...callbacks, path];
 
         router[method](...args);
       };

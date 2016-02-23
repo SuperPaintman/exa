@@ -9,6 +9,7 @@
     "url": "http://flatdev.ru/"
   },
   "scripts": {
+    "start": "gulp watch",
     "build": "gulp clear && gulp build",
     "test": "mocha ./bin/test",
     "test-ci": "istanbul cover ./node_modules/mocha/bin/_mocha ./bin/test",
@@ -39,6 +40,8 @@
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
+    "gulp-plumber": "^1.1.0",
+    "gulp-util": "^3.0.7",
     "mocha": "^2.4.5"
   },
   "dependencies": {
