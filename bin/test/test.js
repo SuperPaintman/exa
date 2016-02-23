@@ -34,7 +34,7 @@ function memLatency(ms, res) {
 }
 
 /** Tests */
-describe('Mixed "app"', function () {
+describe('Mixed `app`', function () {
   describe('middleware', function () {
     describe('should works with `async/await`', function () {
       var app = (0, _exa2.default)((0, _express2.default)());
@@ -373,6 +373,217 @@ describe('Mixed "app"', function () {
 
         agent.post('/').expect('hello post!').expect(200).end(done);
       });
+    });
+  });
+});
+
+describe('Wrap callbacks with `exa.wrap`', function () {
+  describe('middleware', function () {
+    var app = (0, _express2.default)();
+    var agent = _supertest2.default.agent(app);
+
+    app.use(function (req, res, next) {
+      res.calls = [];
+      next();
+    });
+
+    /*eslint-disable arrow-parens */
+    app.use(_exa2.default.wrap(function () {
+      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(req, res, next) {
+        var item;
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _context8.next = 2;
+                return memLatency(100, 'one');
+
+              case 2:
+                item = _context8.sent;
+
+                res.calls.push(item);
+                next();
+
+              case 5:
+              case 'end':
+                return _context8.stop();
+            }
+          }
+        }, _callee8, undefined);
+      })),
+          _this = undefined;
+
+      return function (_x18, _x19, _x20) {
+        return ref.apply(_this, arguments);
+      };
+    }()));
+
+    app.use(function (req, res, next) {
+      var item = 'two';
+      res.calls.push(item);
+      next();
+    });
+
+    /*eslint-disable arrow-parens */
+    app.use(_exa2.default.wrap(function () {
+      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee9(req, res) {
+        return regeneratorRuntime.wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                _context9.next = 2;
+                return memLatency(100);
+
+              case 2:
+
+                res.send(res.calls);
+
+              case 3:
+              case 'end':
+                return _context9.stop();
+            }
+          }
+        }, _callee9, undefined);
+      })),
+          _this = undefined;
+
+      return function (_x21, _x22) {
+        return ref.apply(_this, arguments);
+      };
+    }()));
+
+    it('GET /', function (done) {
+      this.timeout(5000);
+      this.slow(1000);
+
+      agent.get('/').expect('Content-Type', /json/).expect(200).end(function (err, res) {
+        if (err) {
+          throw err;
+        }
+
+        _assert2.default.deepEqual(res.body, ['one', 'two']);
+
+        done();
+      });
+    });
+  });
+
+  describe('POST / GET', function () {
+    var app = (0, _express2.default)();
+    var agent = _supertest2.default.agent(app);
+
+    /*eslint-disable arrow-parens */
+    app.get("/", _exa2.default.wrap(function () {
+      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee10(req, res) {
+        var text;
+        return regeneratorRuntime.wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
+              case 0:
+                _context10.next = 2;
+                return memLatency(100, 'hello exa!');
+
+              case 2:
+                text = _context10.sent;
+
+
+                res.send(text);
+
+              case 4:
+              case 'end':
+                return _context10.stop();
+            }
+          }
+        }, _callee10, undefined);
+      })),
+          _this = undefined;
+
+      return function (_x23, _x24) {
+        return ref.apply(_this, arguments);
+      };
+    }()));
+
+    /*eslint-disable arrow-parens */
+    app.post("/", _exa2.default.wrap(function () {
+      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee11(req, res) {
+        var text;
+        return regeneratorRuntime.wrap(function _callee11$(_context11) {
+          while (1) {
+            switch (_context11.prev = _context11.next) {
+              case 0:
+                _context11.next = 2;
+                return memLatency(100, 'hello post!');
+
+              case 2:
+                text = _context11.sent;
+
+
+                res.send(text);
+
+              case 4:
+              case 'end':
+                return _context11.stop();
+            }
+          }
+        }, _callee11, undefined);
+      })),
+          _this = undefined;
+
+      return function (_x25, _x26) {
+        return ref.apply(_this, arguments);
+      };
+    }()));
+
+    /*eslint-disable arrow-parens */
+    app.get("/:text", _exa2.default.wrap(function () {
+      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee12(req, res) {
+        var text;
+        return regeneratorRuntime.wrap(function _callee12$(_context12) {
+          while (1) {
+            switch (_context12.prev = _context12.next) {
+              case 0:
+                _context12.next = 2;
+                return memLatency(100, 'hello ' + req.params.text + '!');
+
+              case 2:
+                text = _context12.sent;
+
+
+                res.send(text);
+
+              case 4:
+              case 'end':
+                return _context12.stop();
+            }
+          }
+        }, _callee12, undefined);
+      })),
+          _this = undefined;
+
+      return function (_x27, _x28) {
+        return ref.apply(_this, arguments);
+      };
+    }()));
+
+    it('GET /', function (done) {
+      this.timeout(5000);
+      this.slow(1000);
+
+      agent.get('/').expect('hello exa!').expect(200).end(done);
+    });
+
+    it('GET /world', function (done) {
+      this.timeout(5000);
+      this.slow(1000);
+
+      agent.get('/world').expect('hello world!').expect(200).end(done);
+    });
+
+    it('POST /', function (done) {
+      this.timeout(5000);
+      this.slow(1000);
+
+      agent.post('/').expect('hello post!').expect(200).end(done);
     });
   });
 });

@@ -18,7 +18,7 @@ function memLatency(ms, res) {
 }
 
 /** Tests */
-describe('Mixed "app"', () => {
+describe('Mixed `app`', () => {
   describe('middleware', () => {
     describe('should works with `async/await`', () => {
       const app = exa(express());
@@ -236,6 +236,123 @@ describe('Mixed "app"', () => {
           .expect(200)
           .end(done);
       });
+    });
+  });
+});
+
+describe('Wrap callbacks with `exa.wrap`', () => {
+  describe('middleware', () => {
+    const app = express();
+    const agent = request.agent(app);
+
+    app.use((req, res, next) => {
+      res.calls = [];
+      next();
+    });
+
+    /*eslint-disable arrow-parens */
+    app.use(exa.wrap(async (req, res, next) => {
+      /*eslint-enable arrow-parens */
+
+      const item = await memLatency(100, 'one');
+      res.calls.push(item);
+      next();
+    }));
+
+    app.use((req, res, next) => {
+      const item = 'two';
+      res.calls.push(item);
+      next();
+    });
+
+    /*eslint-disable arrow-parens */
+    app.use(exa.wrap(async (req, res) => {
+      /*eslint-enable arrow-parens */
+
+      await memLatency(100);
+
+      res.send(res.calls);
+    }));
+
+    it('GET /', function (done) {
+      this.timeout(5000);
+      this.slow(1000);
+
+      agent
+        .get('/')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          assert.deepEqual(res.body, ['one', 'two']);
+
+          done();
+        });
+    });
+  });
+
+  describe('POST / GET', () => {
+    const app = express();
+    const agent = request.agent(app);
+
+    /*eslint-disable arrow-parens */
+    app.get("/", exa.wrap(async (req, res) => {
+      /*eslint-enable arrow-parens */
+      const text = await memLatency(100, 'hello exa!');
+
+      res.send(text);
+    }));
+
+    /*eslint-disable arrow-parens */
+    app.post("/", exa.wrap(async (req, res) => {
+      /*eslint-enable arrow-parens */
+      const text = await memLatency(100, 'hello post!');
+
+      res.send(text);
+    }));
+
+    /*eslint-disable arrow-parens */
+    app.get("/:text", exa.wrap(async (req, res) => {
+      /*eslint-enable arrow-parens */
+      const text = await memLatency(100, `hello ${req.params.text}!`);
+
+      res.send(text);
+    }));
+
+    it('GET /', function (done) {
+      this.timeout(5000);
+      this.slow(1000);
+
+      agent
+        .get('/')
+        .expect('hello exa!')
+        .expect(200)
+        .end(done);
+    });
+
+    it('GET /world', function (done) {
+      this.timeout(5000);
+      this.slow(1000);
+
+      agent
+        .get('/world')
+        .expect('hello world!')
+        .expect(200)
+        .end(done);
+    });
+
+    it('POST /', function (done) {
+      this.timeout(5000);
+      this.slow(1000);
+
+      agent
+        .post('/')
+        .expect('hello post!')
+        .expect(200)
+        .end(done);
     });
   });
 });

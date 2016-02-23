@@ -88,7 +88,7 @@ function wrapCallbacks(callbacks) {
  *
  * @return {Express|Router}
  */
-export default function exa(router, options) {
+function exa(router, options) {
   options = _.merge({
     prefix: "$",
     suffix: "",
@@ -133,3 +133,7 @@ export default function exa(router, options) {
 
   return router;
 }
+
+exa.wrap = wrapCallback;
+
+export default exa;

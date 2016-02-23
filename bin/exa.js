@@ -4,7 +4,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exa;
 
 var _lodash = require('lodash');
 
@@ -147,4 +146,8 @@ function exa(router, options) {
 
   return router;
 }
+
+exa.wrap = wrapCallback;
+
+exports.default = exa;
 module.exports = exports['default'];
