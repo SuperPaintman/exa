@@ -170,6 +170,161 @@ describe('Mixed `app`', function () {
         });
       });
     });
+
+    describe('should catch errors with `async/await`', function () {
+      var app = (0, _exa2.default)((0, _express2.default)());
+      var agent = _supertest2.default.agent(app);
+
+      /*eslint-disable arrow-parens */
+      app.$use(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(req, res, next) {
+          return regeneratorRuntime.wrap(function _callee5$(_context5) {
+            while (1) {
+              switch (_context5.prev = _context5.next) {
+                case 0:
+                  /*eslint-enable arrow-parens */
+                  res.calls = [];
+                  next();
+
+                case 2:
+                case 'end':
+                  return _context5.stop();
+              }
+            }
+          }, _callee5, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x12, _x13, _x14) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      /*eslint-disable arrow-parens */
+      app.$use(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(req, res, next) {
+          var item;
+          return regeneratorRuntime.wrap(function _callee6$(_context6) {
+            while (1) {
+              switch (_context6.prev = _context6.next) {
+                case 0:
+                  _context6.next = 2;
+                  return memLatency(100, 'one');
+
+                case 2:
+                  item = _context6.sent;
+
+                  res.calls.push(item);
+                  next();
+
+                case 5:
+                case 'end':
+                  return _context6.stop();
+              }
+            }
+          }, _callee6, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x15, _x16, _x17) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      /*eslint-disable arrow-parens */
+      app.$use(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee7(req, res, next) {
+          var item;
+          return regeneratorRuntime.wrap(function _callee7$(_context7) {
+            while (1) {
+              switch (_context7.prev = _context7.next) {
+                case 0:
+                  _context7.next = 2;
+                  return memLatency(100, 'two');
+
+                case 2:
+                  item = _context7.sent;
+                  throw new Error("Booom!!!");
+
+                case 6:
+                case 'end':
+                  return _context7.stop();
+              }
+            }
+          }, _callee7, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x18, _x19, _x20) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      /*eslint-disable arrow-parens */
+      app.$use(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(req, res) {
+          return regeneratorRuntime.wrap(function _callee8$(_context8) {
+            while (1) {
+              switch (_context8.prev = _context8.next) {
+                case 0:
+                  _context8.next = 2;
+                  return memLatency(100);
+
+                case 2:
+
+                  res.send(res.calls);
+
+                case 3:
+                case 'end':
+                  return _context8.stop();
+              }
+            }
+          }, _callee8, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x21, _x22) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      /*eslint-disable arrow-parens */
+      app.$use(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee9(err, req, res, next) {
+          return regeneratorRuntime.wrap(function _callee9$(_context9) {
+            while (1) {
+              switch (_context9.prev = _context9.next) {
+                case 0:
+                  _context9.next = 2;
+                  return memLatency(100);
+
+                case 2:
+
+                  res.status(500);
+                  res.send(err.message);
+
+                case 4:
+                case 'end':
+                  return _context9.stop();
+              }
+            }
+          }, _callee9, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x23, _x24, _x25, _x26) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      it('GET /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.get('/').expect("Booom!!!").expect(500).end(done);
+      });
+    });
+
     describe('should works without `async/await`', function () {
       var app = (0, _exa2.default)((0, _express2.default)());
       var agent = _supertest2.default.agent(app);
@@ -211,6 +366,7 @@ describe('Mixed `app`', function () {
       });
     });
   });
+
   describe('POST / GET', function () {
     describe('should works with `async/await`', function () {
       var app = (0, _exa2.default)((0, _express2.default)());
@@ -218,93 +374,93 @@ describe('Mixed `app`', function () {
 
       /*eslint-disable arrow-parens */
       app.$get("/", function () {
-        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(req, res) {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee10(req, res) {
           var text;
-          return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          return regeneratorRuntime.wrap(function _callee10$(_context10) {
             while (1) {
-              switch (_context5.prev = _context5.next) {
+              switch (_context10.prev = _context10.next) {
                 case 0:
-                  _context5.next = 2;
+                  _context10.next = 2;
                   return memLatency(100, 'hello exa!');
 
                 case 2:
-                  text = _context5.sent;
+                  text = _context10.sent;
 
 
                   res.send(text);
 
                 case 4:
                 case 'end':
-                  return _context5.stop();
+                  return _context10.stop();
               }
             }
-          }, _callee5, undefined);
+          }, _callee10, undefined);
         })),
             _this = undefined;
 
-        return function (_x12, _x13) {
+        return function (_x27, _x28) {
           return ref.apply(_this, arguments);
         };
       }());
 
       /*eslint-disable arrow-parens */
       app.$post("/", function () {
-        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(req, res) {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee11(req, res) {
           var text;
-          return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          return regeneratorRuntime.wrap(function _callee11$(_context11) {
             while (1) {
-              switch (_context6.prev = _context6.next) {
+              switch (_context11.prev = _context11.next) {
                 case 0:
-                  _context6.next = 2;
+                  _context11.next = 2;
                   return memLatency(100, 'hello post!');
 
                 case 2:
-                  text = _context6.sent;
+                  text = _context11.sent;
 
 
                   res.send(text);
 
                 case 4:
                 case 'end':
-                  return _context6.stop();
+                  return _context11.stop();
               }
             }
-          }, _callee6, undefined);
+          }, _callee11, undefined);
         })),
             _this = undefined;
 
-        return function (_x14, _x15) {
+        return function (_x29, _x30) {
           return ref.apply(_this, arguments);
         };
       }());
 
       /*eslint-disable arrow-parens */
       app.$get("/:text", function () {
-        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee7(req, res) {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee12(req, res) {
           var text;
-          return regeneratorRuntime.wrap(function _callee7$(_context7) {
+          return regeneratorRuntime.wrap(function _callee12$(_context12) {
             while (1) {
-              switch (_context7.prev = _context7.next) {
+              switch (_context12.prev = _context12.next) {
                 case 0:
-                  _context7.next = 2;
+                  _context12.next = 2;
                   return memLatency(100, 'hello ' + req.params.text + '!');
 
                 case 2:
-                  text = _context7.sent;
+                  text = _context12.sent;
 
 
                   res.send(text);
 
                 case 4:
                 case 'end':
-                  return _context7.stop();
+                  return _context12.stop();
               }
             }
-          }, _callee7, undefined);
+          }, _callee12, undefined);
         })),
             _this = undefined;
 
-        return function (_x16, _x17) {
+        return function (_x31, _x32) {
           return ref.apply(_this, arguments);
         };
       }());
@@ -328,6 +484,148 @@ describe('Mixed `app`', function () {
         this.slow(1000);
 
         agent.post('/').expect('hello post!').expect(200).end(done);
+      });
+    });
+
+    describe('should catch errors with `async/await`', function () {
+      var app = (0, _exa2.default)((0, _express2.default)());
+      var agent = _supertest2.default.agent(app);
+
+      /*eslint-disable arrow-parens */
+      app.$get("/", function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee13(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee13$(_context13) {
+            while (1) {
+              switch (_context13.prev = _context13.next) {
+                case 0:
+                  _context13.next = 2;
+                  return memLatency(100, 'hello exa!');
+
+                case 2:
+                  text = _context13.sent;
+                  throw new Error('bye exa!');
+
+                case 5:
+                case 'end':
+                  return _context13.stop();
+              }
+            }
+          }, _callee13, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x33, _x34) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      /*eslint-disable arrow-parens */
+      app.$post("/", function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee14(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee14$(_context14) {
+            while (1) {
+              switch (_context14.prev = _context14.next) {
+                case 0:
+                  _context14.next = 2;
+                  return memLatency(100, 'hello post!');
+
+                case 2:
+                  text = _context14.sent;
+                  throw new Error('bye post!');
+
+                case 5:
+                case 'end':
+                  return _context14.stop();
+              }
+            }
+          }, _callee14, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x35, _x36) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      /*eslint-disable arrow-parens */
+      app.$get("/:text", function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee15(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee15$(_context15) {
+            while (1) {
+              switch (_context15.prev = _context15.next) {
+                case 0:
+                  _context15.next = 2;
+                  return memLatency(100, 'hello ' + req.params.text + '!');
+
+                case 2:
+                  text = _context15.sent;
+                  throw new Error('bye ' + req.params.text + '!');
+
+                case 5:
+                case 'end':
+                  return _context15.stop();
+              }
+            }
+          }, _callee15, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x37, _x38) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      /*eslint-disable arrow-parens */
+      app.$use(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee16(err, req, res, next) {
+          return regeneratorRuntime.wrap(function _callee16$(_context16) {
+            while (1) {
+              switch (_context16.prev = _context16.next) {
+                case 0:
+                  _context16.next = 2;
+                  return memLatency(100);
+
+                case 2:
+
+                  res.status(500);
+                  res.send(err.message);
+
+                case 4:
+                case 'end':
+                  return _context16.stop();
+              }
+            }
+          }, _callee16, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x39, _x40, _x41, _x42) {
+          return ref.apply(_this, arguments);
+        };
+      }());
+
+      it('GET /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.get('/').expect('bye exa!').expect(500).end(done);
+      });
+
+      it('GET /world', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.get('/world').expect('bye world!').expect(500).end(done);
+      });
+
+      it('POST /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.post('/').expect('bye post!').expect(500).end(done);
       });
     });
 
@@ -379,211 +677,466 @@ describe('Mixed `app`', function () {
 
 describe('Wrap callbacks with `exa.wrap`', function () {
   describe('middleware', function () {
-    var app = (0, _express2.default)();
-    var agent = _supertest2.default.agent(app);
+    describe('should works with `async/await`', function () {
+      var app = (0, _express2.default)();
+      var agent = _supertest2.default.agent(app);
 
-    app.use(function (req, res, next) {
-      res.calls = [];
-      next();
+      app.use(function (req, res, next) {
+        res.calls = [];
+        next();
+      });
+
+      /*eslint-disable arrow-parens */
+      app.use(_exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee17(req, res, next) {
+          var item;
+          return regeneratorRuntime.wrap(function _callee17$(_context17) {
+            while (1) {
+              switch (_context17.prev = _context17.next) {
+                case 0:
+                  _context17.next = 2;
+                  return memLatency(100, 'one');
+
+                case 2:
+                  item = _context17.sent;
+
+                  res.calls.push(item);
+                  next();
+
+                case 5:
+                case 'end':
+                  return _context17.stop();
+              }
+            }
+          }, _callee17, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x43, _x44, _x45) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
+
+      app.use(function (req, res, next) {
+        var item = 'two';
+        res.calls.push(item);
+        next();
+      });
+
+      /*eslint-disable arrow-parens */
+      app.use(_exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee18(req, res) {
+          return regeneratorRuntime.wrap(function _callee18$(_context18) {
+            while (1) {
+              switch (_context18.prev = _context18.next) {
+                case 0:
+                  _context18.next = 2;
+                  return memLatency(100);
+
+                case 2:
+
+                  res.send(res.calls);
+
+                case 3:
+                case 'end':
+                  return _context18.stop();
+              }
+            }
+          }, _callee18, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x46, _x47) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
+
+      it('GET /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.get('/').expect('Content-Type', /json/).expect(200).end(function (err, res) {
+          if (err) {
+            throw err;
+          }
+
+          _assert2.default.deepEqual(res.body, ['one', 'two']);
+
+          done();
+        });
+      });
     });
 
-    /*eslint-disable arrow-parens */
-    app.use(_exa2.default.wrap(function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(req, res, next) {
-        var item;
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                _context8.next = 2;
-                return memLatency(100, 'one');
+    describe('should catch errors with `async/await`', function () {
+      var app = (0, _express2.default)();
+      var agent = _supertest2.default.agent(app);
 
-              case 2:
-                item = _context8.sent;
+      app.use(function (req, res, next) {
+        res.calls = [];
+        next();
+      });
 
-                res.calls.push(item);
-                next();
+      /*eslint-disable arrow-parens */
+      app.use(_exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee19(req, res, next) {
+          var item;
+          return regeneratorRuntime.wrap(function _callee19$(_context19) {
+            while (1) {
+              switch (_context19.prev = _context19.next) {
+                case 0:
+                  _context19.next = 2;
+                  return memLatency(100, 'one');
 
-              case 5:
-              case 'end':
-                return _context8.stop();
+                case 2:
+                  item = _context19.sent;
+                  throw new Error("Booom!!!");
+
+                case 6:
+                case 'end':
+                  return _context19.stop();
+              }
             }
-          }
-        }, _callee8, undefined);
-      })),
-          _this = undefined;
+          }, _callee19, undefined);
+        })),
+            _this = undefined;
 
-      return function (_x18, _x19, _x20) {
-        return ref.apply(_this, arguments);
-      };
-    }()));
+        return function (_x48, _x49, _x50) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
 
-    app.use(function (req, res, next) {
-      var item = 'two';
-      res.calls.push(item);
-      next();
-    });
+      app.use(function (req, res, next) {
+        var item = 'two';
+        res.calls.push(item);
+        next();
+      });
 
-    /*eslint-disable arrow-parens */
-    app.use(_exa2.default.wrap(function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee9(req, res) {
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
-          while (1) {
-            switch (_context9.prev = _context9.next) {
-              case 0:
-                _context9.next = 2;
-                return memLatency(100);
+      /*eslint-disable arrow-parens */
+      app.use(_exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee20(req, res) {
+          return regeneratorRuntime.wrap(function _callee20$(_context20) {
+            while (1) {
+              switch (_context20.prev = _context20.next) {
+                case 0:
+                  _context20.next = 2;
+                  return memLatency(100);
 
-              case 2:
+                case 2:
 
-                res.send(res.calls);
+                  res.send(res.calls);
 
-              case 3:
-              case 'end':
-                return _context9.stop();
+                case 3:
+                case 'end':
+                  return _context20.stop();
+              }
             }
-          }
-        }, _callee9, undefined);
-      })),
-          _this = undefined;
+          }, _callee20, undefined);
+        })),
+            _this = undefined;
 
-      return function (_x21, _x22) {
-        return ref.apply(_this, arguments);
-      };
-    }()));
+        return function (_x51, _x52) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
 
-    it('GET /', function (done) {
-      this.timeout(5000);
-      this.slow(1000);
+      /*eslint-disable arrow-parens */
+      app.use(_exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee21(err, req, res, next) {
+          return regeneratorRuntime.wrap(function _callee21$(_context21) {
+            while (1) {
+              switch (_context21.prev = _context21.next) {
+                case 0:
+                  _context21.next = 2;
+                  return memLatency(100);
 
-      agent.get('/').expect('Content-Type', /json/).expect(200).end(function (err, res) {
-        if (err) {
-          throw err;
-        }
+                case 2:
 
-        _assert2.default.deepEqual(res.body, ['one', 'two']);
+                  res.status(500);
+                  res.send(err.message);
 
-        done();
+                case 4:
+                case 'end':
+                  return _context21.stop();
+              }
+            }
+          }, _callee21, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x53, _x54, _x55, _x56) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
+
+      it('GET /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.get('/').expect("Booom!!!").expect(500).end(done);
       });
     });
   });
 
   describe('POST / GET', function () {
-    var app = (0, _express2.default)();
-    var agent = _supertest2.default.agent(app);
+    describe('should works with `async/await`', function () {
+      var app = (0, _express2.default)();
+      var agent = _supertest2.default.agent(app);
 
-    /*eslint-disable arrow-parens */
-    app.get("/", _exa2.default.wrap(function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee10(req, res) {
-        var text;
-        return regeneratorRuntime.wrap(function _callee10$(_context10) {
-          while (1) {
-            switch (_context10.prev = _context10.next) {
-              case 0:
-                _context10.next = 2;
-                return memLatency(100, 'hello exa!');
+      /*eslint-disable arrow-parens */
+      app.get("/", _exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee22(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee22$(_context22) {
+            while (1) {
+              switch (_context22.prev = _context22.next) {
+                case 0:
+                  _context22.next = 2;
+                  return memLatency(100, 'hello exa!');
 
-              case 2:
-                text = _context10.sent;
+                case 2:
+                  text = _context22.sent;
 
 
-                res.send(text);
+                  res.send(text);
 
-              case 4:
-              case 'end':
-                return _context10.stop();
+                case 4:
+                case 'end':
+                  return _context22.stop();
+              }
             }
-          }
-        }, _callee10, undefined);
-      })),
-          _this = undefined;
+          }, _callee22, undefined);
+        })),
+            _this = undefined;
 
-      return function (_x23, _x24) {
-        return ref.apply(_this, arguments);
-      };
-    }()));
+        return function (_x57, _x58) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
 
-    /*eslint-disable arrow-parens */
-    app.post("/", _exa2.default.wrap(function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee11(req, res) {
-        var text;
-        return regeneratorRuntime.wrap(function _callee11$(_context11) {
-          while (1) {
-            switch (_context11.prev = _context11.next) {
-              case 0:
-                _context11.next = 2;
-                return memLatency(100, 'hello post!');
+      /*eslint-disable arrow-parens */
+      app.post("/", _exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee23(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee23$(_context23) {
+            while (1) {
+              switch (_context23.prev = _context23.next) {
+                case 0:
+                  _context23.next = 2;
+                  return memLatency(100, 'hello post!');
 
-              case 2:
-                text = _context11.sent;
+                case 2:
+                  text = _context23.sent;
 
 
-                res.send(text);
+                  res.send(text);
 
-              case 4:
-              case 'end':
-                return _context11.stop();
+                case 4:
+                case 'end':
+                  return _context23.stop();
+              }
             }
-          }
-        }, _callee11, undefined);
-      })),
-          _this = undefined;
+          }, _callee23, undefined);
+        })),
+            _this = undefined;
 
-      return function (_x25, _x26) {
-        return ref.apply(_this, arguments);
-      };
-    }()));
+        return function (_x59, _x60) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
 
-    /*eslint-disable arrow-parens */
-    app.get("/:text", _exa2.default.wrap(function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee12(req, res) {
-        var text;
-        return regeneratorRuntime.wrap(function _callee12$(_context12) {
-          while (1) {
-            switch (_context12.prev = _context12.next) {
-              case 0:
-                _context12.next = 2;
-                return memLatency(100, 'hello ' + req.params.text + '!');
+      /*eslint-disable arrow-parens */
+      app.get("/:text", _exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee24(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee24$(_context24) {
+            while (1) {
+              switch (_context24.prev = _context24.next) {
+                case 0:
+                  _context24.next = 2;
+                  return memLatency(100, 'hello ' + req.params.text + '!');
 
-              case 2:
-                text = _context12.sent;
+                case 2:
+                  text = _context24.sent;
 
 
-                res.send(text);
+                  res.send(text);
 
-              case 4:
-              case 'end':
-                return _context12.stop();
+                case 4:
+                case 'end':
+                  return _context24.stop();
+              }
             }
-          }
-        }, _callee12, undefined);
-      })),
-          _this = undefined;
+          }, _callee24, undefined);
+        })),
+            _this = undefined;
 
-      return function (_x27, _x28) {
-        return ref.apply(_this, arguments);
-      };
-    }()));
+        return function (_x61, _x62) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
 
-    it('GET /', function (done) {
-      this.timeout(5000);
-      this.slow(1000);
+      it('GET /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
 
-      agent.get('/').expect('hello exa!').expect(200).end(done);
+        agent.get('/').expect('hello exa!').expect(200).end(done);
+      });
+
+      it('GET /world', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.get('/world').expect('hello world!').expect(200).end(done);
+      });
+
+      it('POST /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.post('/').expect('hello post!').expect(200).end(done);
+      });
     });
 
-    it('GET /world', function (done) {
-      this.timeout(5000);
-      this.slow(1000);
+    describe('should catch errors with `async/await`', function () {
+      var app = (0, _express2.default)();
+      var agent = _supertest2.default.agent(app);
 
-      agent.get('/world').expect('hello world!').expect(200).end(done);
-    });
+      /*eslint-disable arrow-parens */
+      app.get("/", _exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee25(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee25$(_context25) {
+            while (1) {
+              switch (_context25.prev = _context25.next) {
+                case 0:
+                  _context25.next = 2;
+                  return memLatency(100, 'hello exa!');
 
-    it('POST /', function (done) {
-      this.timeout(5000);
-      this.slow(1000);
+                case 2:
+                  text = _context25.sent;
+                  throw new Error('bye exa!');
 
-      agent.post('/').expect('hello post!').expect(200).end(done);
+                case 5:
+                case 'end':
+                  return _context25.stop();
+              }
+            }
+          }, _callee25, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x63, _x64) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
+
+      /*eslint-disable arrow-parens */
+      app.post("/", _exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee26(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee26$(_context26) {
+            while (1) {
+              switch (_context26.prev = _context26.next) {
+                case 0:
+                  _context26.next = 2;
+                  return memLatency(100, 'hello post!');
+
+                case 2:
+                  text = _context26.sent;
+                  throw new Error('bye post!');
+
+                case 5:
+                case 'end':
+                  return _context26.stop();
+              }
+            }
+          }, _callee26, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x65, _x66) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
+
+      /*eslint-disable arrow-parens */
+      app.get("/:text", _exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee27(req, res) {
+          var text;
+          return regeneratorRuntime.wrap(function _callee27$(_context27) {
+            while (1) {
+              switch (_context27.prev = _context27.next) {
+                case 0:
+                  _context27.next = 2;
+                  return memLatency(100, 'hello ' + req.params.text + '!');
+
+                case 2:
+                  text = _context27.sent;
+                  throw new Error('bye ' + req.params.text + '!');
+
+                case 5:
+                case 'end':
+                  return _context27.stop();
+              }
+            }
+          }, _callee27, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x67, _x68) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
+
+      /*eslint-disable arrow-parens */
+      app.use(_exa2.default.wrap(function () {
+        var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee28(err, req, res, next) {
+          return regeneratorRuntime.wrap(function _callee28$(_context28) {
+            while (1) {
+              switch (_context28.prev = _context28.next) {
+                case 0:
+                  _context28.next = 2;
+                  return memLatency(100);
+
+                case 2:
+
+                  res.status(500);
+                  res.send(err.message);
+
+                case 4:
+                case 'end':
+                  return _context28.stop();
+              }
+            }
+          }, _callee28, undefined);
+        })),
+            _this = undefined;
+
+        return function (_x69, _x70, _x71, _x72) {
+          return ref.apply(_this, arguments);
+        };
+      }()));
+
+      it('GET /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.get('/').expect('bye exa!').expect(500).end(done);
+      });
+
+      it('GET /world', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.get('/world').expect('bye world!').expect(500).end(done);
+      });
+
+      it('POST /', function (done) {
+        this.timeout(5000);
+        this.slow(1000);
+
+        agent.post('/').expect('bye post!').expect(500).end(done);
+      });
     });
   });
 });
