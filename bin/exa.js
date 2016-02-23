@@ -100,7 +100,7 @@ function exa(router, options) {
   // Use
   ['use'].forEach(function (method) {
     if (router[method]) {
-      var newMethodName = options.name[method] ? options.name[method] : method;
+      var newMethodName = options.alias[method] ? options.alias[method] : method;
 
       var $method = options.prefix + newMethodName + options.suffix;
 
@@ -128,7 +128,7 @@ function exa(router, options) {
         // Proxy
         callbacks = proxyCallbacks(callbacks);
 
-        var args = [].concat(_toConsumableArray(callbacks), [path]);
+        var args = [path].concat(_toConsumableArray(callbacks));
 
         router[method].apply(router, _toConsumableArray(args));
       };

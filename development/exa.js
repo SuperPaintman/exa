@@ -88,8 +88,8 @@ export default function exa(router, options) {
   // Use
   ['use'].forEach((method) => {
     if (router[method]) {
-      const newMethodName = options.name[method]
-                          ? options.name[method]
+      const newMethodName = options.alias[method]
+                          ? options.alias[method]
                           : method;
 
       const $method = options.prefix + newMethodName + options.suffix;
@@ -114,7 +114,7 @@ export default function exa(router, options) {
         // Proxy
         callbacks = proxyCallbacks(callbacks);
 
-        const args = [...callbacks, path];
+        const args = [path, ...callbacks];
 
         router[method](...args);
       };
