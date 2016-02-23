@@ -22,55 +22,63 @@ function isPromise(obj) {
 }
 
 /**
+ * Оборачивает один колбек в прокси
+ * @param  {Function} callbacks
+ *
+ * @return {Array}
+ */
+function proxyCallback(callback) {
+  const _callback = callback;
+
+  let result;
+  switch (callback.length) {
+    case 4:
+      callback = function (err, req, res, next) {
+        result = _callback(err, req, res, next);
+
+        if (isPromise(result)) {
+          result.catch(function (err) {
+            next(err);
+          });
+        }
+      };
+      break;
+    case 3:
+      callback = function (req, res, next) {
+        result = _callback(req, res, next);
+
+        if (isPromise(result)) {
+          result.catch(function (err) {
+            next(err);
+          });
+        }
+      };
+      break;
+    case 2:
+    default:
+      callback = function (req, res, next) {
+        result = _callback(req, res);
+
+        if (isPromise(result)) {
+          result.catch(function (err) {
+            next(err);
+          });
+        }
+      };
+      break;
+  }
+
+  return callback;
+}
+
+/**
  * Оборачивает все колбеки в прокси
  * @param  {Array} callbacks
  *
  * @return {Array}
  */
 function proxyCallbacks(callbacks) {
-  return callbacks.map((callback) => {
-    const _callback = callback;
-
-    let result;
-    switch (callback.length) {
-      case 4:
-        callback = function (err, req, res, next) {
-          result = _callback(err, req, res, next);
-
-          if (isPromise(result)) {
-            result.catch(function (err) {
-              next(err);
-            });
-          }
-        };
-        break;
-      case 3:
-        callback = function (req, res, next) {
-          result = _callback(req, res, next);
-
-          if (isPromise(result)) {
-            result.catch(function (err) {
-              next(err);
-            });
-          }
-        };
-        break;
-      case 2:
-      default:
-        callback = function (req, res, next) {
-          result = _callback(req, res);
-
-          if (isPromise(result)) {
-            result.catch(function (err) {
-              next(err);
-            });
-          }
-        };
-        break;
-    }
-
-    return callback;
-  });
+  return callbacks.map((callback) => proxyCallback(callback));
 }
 
 /**
