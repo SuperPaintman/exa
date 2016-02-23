@@ -24,6 +24,7 @@
     "bin",
     "README",
     "README.md",
+    ".editorconfig",
     ".eslintrc.yml",
     ".babelrc",
     "bare.js",
