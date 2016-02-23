@@ -28,7 +28,7 @@ var slice = Array.prototype.slice;
  * @return {Boolean}
  */
 function isPromise(obj) {
-  return !!obj && obj.constructor && obj.constructor.name === 'Promise' || !!obj.then && typeof obj.then === 'function' || !!obj.catch && typeof obj.catch === 'function';
+  return !!obj && (obj.constructor && obj.constructor.name === 'Promise' || !!obj.then && typeof obj.then === 'function' || !!obj.catch && typeof obj.catch === 'function');
 }
 
 /**

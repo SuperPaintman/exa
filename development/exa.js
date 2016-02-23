@@ -14,9 +14,11 @@ const slice = Array.prototype.slice;
  */
 function isPromise(obj) {
   return !!obj
-    && (obj.constructor && obj.constructor.name === 'Promise')
-    || (!!obj.then  && typeof obj.then  === 'function')
-    || (!!obj.catch && typeof obj.catch === 'function');
+    && (
+      (obj.constructor && obj.constructor.name === 'Promise')
+      || (!!obj.then  && typeof obj.then  === 'function')
+      || (!!obj.catch && typeof obj.catch === 'function')
+    );
 }
 
 /**
