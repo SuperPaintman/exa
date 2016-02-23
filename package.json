@@ -1,7 +1,7 @@
 {
   "name": "exa",
-  "version": "0.2.4",
-  "description": "ES7 async/await route handlers for Express",
+  "version": "0.3.0",
+  "description": "ES7 async/await or ES6 generator route handlers for Express",
   "main": "bin/exa.js",
   "author": {
     "name": "SuperPaintman",
@@ -19,8 +19,10 @@
   "keywords": [
     "express",
     "generator",
+    "yield",
     "flow",
     "promise",
+    "ES6",
     "ES7",
     "async",
     "async-await",
@@ -63,6 +65,7 @@
     "supertest": "^1.2.0"
   },
   "dependencies": {
+    "co": "^4.6.0",
     "lodash": "^4.5.1",
     "methods": "^1.1.2"
   }

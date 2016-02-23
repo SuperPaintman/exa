@@ -9,6 +9,10 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _co = require('co');
+
+var _co2 = _interopRequireDefault(_co);
+
 var _methods = require('methods');
 
 var _methods2 = _interopRequireDefault(_methods);
@@ -27,7 +31,33 @@ var slice = Array.prototype.slice;
  * @return {Boolean}
  */
 function isPromise(obj) {
-  return !!obj && (obj.constructor && obj.constructor.name === 'Promise' || !!obj.then && typeof obj.then === 'function' || !!obj.catch && typeof obj.catch === 'function');
+  if (!obj || !obj.constructor) {
+    return false;
+  }
+
+  if (obj.constructor.name === 'Promise' || obj.constructor.displayName === 'Promise') {
+    return true;
+  }
+
+  return typeof obj.then === 'function' || typeof obj.catch === 'function';
+}
+
+/**
+ * Проверка является ли функция генератором
+ * @param {Any} obj
+ *
+ * @return {Boolean}
+ */
+function isGeneratorFunction(obj) {
+  if (!obj || !obj.constructor) {
+    return false;
+  }
+
+  if (obj.constructor.name === 'GeneratorFunction' || obj.constructor.displayName === 'GeneratorFunction') {
+    return true;
+  }
+
+  return typeof obj.next === 'function' && typeof obj.throw === 'function';
 }
 
 /**
@@ -37,10 +67,17 @@ function isPromise(obj) {
  * @return {Array}
  */
 function wrapCallback(callback) {
+  var argsLength = callback.length;
+
   var _callback = callback;
 
+  /** Если функция - генератор, оборачиваем ее как промис через CO */
+  if (isGeneratorFunction(_callback)) {
+    _callback = _co2.default.wrap(_callback);
+  }
+
   var result = undefined;
-  switch (callback.length) {
+  switch (argsLength) {
     case 4:
       callback = function callback(err, req, res, next) {
         result = _callback(err, req, res, next);

@@ -1,6 +1,7 @@
 "use strict";
 /** Requires */
 import _        from 'lodash';
+import co       from 'co';
 import methods  from 'methods';
 
 /** Helps */
@@ -13,12 +14,35 @@ const slice = Array.prototype.slice;
  * @return {Boolean}
  */
 function isPromise(obj) {
-  return !!obj
-    && (
-      (obj.constructor && obj.constructor.name === 'Promise')
-      || (!!obj.then  && typeof obj.then  === 'function')
-      || (!!obj.catch && typeof obj.catch === 'function')
-    );
+  if (!obj || !obj.constructor) {
+    return false;
+  }
+
+  if (obj.constructor.name === 'Promise'
+    || obj.constructor.displayName === 'Promise') {
+    return true;
+  }
+
+  return (typeof obj.then === 'function' || typeof obj.catch === 'function');
+}
+
+/**
+ * Проверка является ли функция генератором
+ * @param {Any} obj
+ *
+ * @return {Boolean}
+ */
+function isGeneratorFunction(obj) {
+  if (!obj || !obj.constructor) {
+    return false;
+  }
+
+  if (obj.constructor.name === 'GeneratorFunction'
+    || obj.constructor.displayName === 'GeneratorFunction') {
+    return true;
+  }
+
+  return (typeof obj.next === 'function' && typeof obj.throw === 'function');
 }
 
 /**
@@ -28,10 +52,17 @@ function isPromise(obj) {
  * @return {Array}
  */
 function wrapCallback(callback) {
-  const _callback = callback;
+  const argsLength = callback.length;
+
+  let _callback = callback;
+
+  /** Если функция - генератор, оборачиваем ее как промис через CO */
+  if (isGeneratorFunction(_callback)) {
+    _callback = co.wrap(_callback);
+  }
 
   let result;
-  switch (callback.length) {
+  switch (argsLength) {
     case 4:
       callback = function (err, req, res, next) {
         result = _callback(err, req, res, next);
