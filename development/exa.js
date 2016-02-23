@@ -27,7 +27,7 @@ function isPromise(obj) {
  *
  * @return {Array}
  */
-function proxyCallback(callback) {
+function wrapCallback(callback) {
   const _callback = callback;
 
   let result;
@@ -77,8 +77,8 @@ function proxyCallback(callback) {
  *
  * @return {Array}
  */
-function proxyCallbacks(callbacks) {
-  return callbacks.map((callback) => proxyCallback(callback));
+function wrapCallbacks(callbacks) {
+  return callbacks.map((callback) => wrapCallback(callback));
 }
 
 /**
@@ -106,7 +106,7 @@ export default function exa(router, options) {
 
       router[$method] = function (...callbacks) {
         // Proxy
-        callbacks = proxyCallbacks(callbacks);
+        callbacks = wrapCallbacks(callbacks);
 
         router[method](...callbacks);
       };
@@ -122,7 +122,7 @@ export default function exa(router, options) {
         let callbacks = slice.call(arguments, 1);
 
         // Proxy
-        callbacks = proxyCallbacks(callbacks);
+        callbacks = wrapCallbacks(callbacks);
 
         const args = [path, ...callbacks];
 

@@ -37,7 +37,7 @@ function isPromise(obj) {
  *
  * @return {Array}
  */
-function proxyCallback(callback) {
+function wrapCallback(callback) {
   var _callback = callback;
 
   var result = undefined;
@@ -87,9 +87,9 @@ function proxyCallback(callback) {
  *
  * @return {Array}
  */
-function proxyCallbacks(callbacks) {
+function wrapCallbacks(callbacks) {
   return callbacks.map(function (callback) {
-    return proxyCallback(callback);
+    return wrapCallback(callback);
   });
 }
 
@@ -120,7 +120,7 @@ function exa(router, options) {
         }
 
         // Proxy
-        callbacks = proxyCallbacks(callbacks);
+        callbacks = wrapCallbacks(callbacks);
 
         router[method].apply(router, _toConsumableArray(callbacks));
       };
@@ -136,7 +136,7 @@ function exa(router, options) {
         var callbacks = slice.call(arguments, 1);
 
         // Proxy
-        callbacks = proxyCallbacks(callbacks);
+        callbacks = wrapCallbacks(callbacks);
 
         var args = [path].concat(_toConsumableArray(callbacks));
 
