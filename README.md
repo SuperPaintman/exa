@@ -18,13 +18,7 @@ npm install exa --save
 
 ## Usage
 ```js
-/** 
- * @note
- * bare - not compilled with Babel sources.
- *        if you use ES6 syntax, import "exa" like this:
- *        require('exa');
- */
-import exa      from 'exa/bare'; 
+import exa      from 'exa'; 
 import express  from 'express';
 
 const app = exa(express());
