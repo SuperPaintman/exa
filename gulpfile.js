@@ -55,7 +55,7 @@ gulp.task('lint', () => {
 });
 
 gulp.task('watch', () => {
-  gulp.watch('./development/**/*.js', ['build']);
+  gulp.watch('./development/**/*.js', ['lint', 'build']);
 });
 
-gulp.task('default', ['build']);
+gulp.task('default', ['lint', 'build']);

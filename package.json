@@ -11,9 +11,10 @@
   "scripts": {
     "start": "gulp watch",
     "build": "gulp clear && gulp build",
-    "test": "mocha ./bin/test",
-    "test-ci": "istanbul cover ./node_modules/mocha/bin/_mocha ./bin/test",
-    "prepublish": "npm run build && npm run test"
+    "lint": "gulp lint",
+    "test": "npm run lint && mocha ./bin/test",
+    "test-ci": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha ./bin/test",
+    "prepublish": "npm run lint && npm run build && npm run test"
   },
   "keywords": [
     "express"
@@ -39,6 +40,7 @@
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-stage-3": "^6.5.0",
     "del": "^2.2.0",
+    "express": "^4.13.4",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-eslint": "^2.0.0",
